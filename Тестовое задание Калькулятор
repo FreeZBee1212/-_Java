@@ -1,0 +1,128 @@
+import java.util.InputMismatchException;
+import java.util.Scanner;
+
+
+public class Calc {
+    static int a, b, res;
+    static Scanner sc = new Scanner(System.in);
+
+    public static void main(String[] args) {
+        System.out.println(calc());
+    }
+
+    private static int convertRomanToArabic(String roman) {
+        switch (roman) {
+            case "I":
+                return 1;
+            case "II":
+                return 2;
+            case "III":
+                return 3;
+            case "IV":
+                return 4;
+            case "V":
+                return 5;
+            case "VI":
+                return 6;
+            case "VII":
+                return 7;
+            case "VIII":
+                return 8;
+            case "IX":
+                return 9;
+            case "X":
+                return 10;
+            default:
+                throw new InputMismatchException("Неверный формат данных");
+        }
+    }
+
+    private static String convertArabicToRoman(int arabic) {
+        if (arabic < 1 || arabic > 100) {
+            throw new InputMismatchException("Неверный формат данных");
+        }
+        String[] roman = {"", "I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X", "XI", "XII", "XIII", "XIV",
+                "XV", "XVI", "XVII", "XVIII", "XIX", "XX", "XXI", "XXII", "XXIII", "XXIV", "XXV", "XXVI", "XXVII",
+                "XXVIII", "XXIX", "XXX", "XXXI", "XXXII", "XXXIII", "XXXIV", "XXXV", "XXXVI", "XXXVII", "XXXVIII",
+                "XXXIX", "XL", "XLI", "XLII", "XLIII", "XLIV", "XLV", "XLVI", "XLVII", "XLVIII", "XLIX", "L", "LI",
+                "LII", "LIII", "LIV", "LV", "LVI", "LVII", "LVIII", "LIX", "LX", "LXI", "LXII", "LXIII", "LXIV", "LXV",
+                "LXVI", "LXVII", "LXVIII", "LXIX", "LXX", "LXXI", "LXXII", "LXXIII", "LXXIV", "LXXV", "LXXVI", "LXXVII",
+                "LXXVIII", "LXXIX", "LXXX", "LXXXI", "LXXXII", "LXXXIII", "LXXXIV", "LXXXV", "LXXXVI", "LXXXVII",
+                "LXXXVIII", "LXXXIX", "XC", "XCI", "XCII", "XCIII", "XCIV", "XCV", "XCVI", "XCVII", "XCVIII", "XCIX",
+                "C"};
+        return roman[arabic];
+    }
+
+    public static String calc() {
+        String input = sc.nextLine();
+        String[] parts = input.split(" ");
+
+        if (parts.length != 3) {
+            throw new InputMismatchException("Неверный формат данных");
+        }
+
+        try {
+            if (isArabic(parts[0]) && isArabic(parts[2])) {
+                a = Integer.parseInt(parts[0]);
+                b = Integer.parseInt(parts[2]);
+                if (a > 10 || b > 10) {
+                    throw new InputMismatchException("Неверный формат данных");
+                }
+                res = calculate(a, parts[1], b);
+                if (res > 100) {
+                    throw new InputMismatchException("Неверный формат данных");
+                }
+                return String.valueOf(res);
+            } else if (isRoman(parts[0]) && isRoman(parts[2])) {
+                a = convertRomanToArabic(parts[0]);
+                b = convertRomanToArabic(parts[2]);
+                if (a > 10 || b > 10) {
+                    throw new InputMismatchException("Неверный формат данных");
+                }
+                res = calculate(a, parts[1], b);
+                if (res > 100) {
+                    throw new InputMismatchException("Неверный формат данных");
+                }
+                return convertArabicToRoman(res);
+            } else {
+                throw new InputMismatchException("Неверный формат данных");
+            }
+        } catch (NumberFormatException e) {
+            throw new InputMismatchException("Неверный формат данных");
+        }
+    }
+
+    private static boolean isArabic(String number) {
+        try {
+            int arabic = Integer.parseInt(number);
+            return arabic >= 1 && arabic <= 10;
+        } catch (NumberFormatException e) {
+            return false;
+        }
+    }
+
+    private static boolean isRoman(String number) {
+        String[] roman = {"I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X"};
+        for (String r : roman) {
+            if (r.equals(number)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private static int calculate(int a, String operator, int b) {
+        switch (operator) {
+            case "+":
+                return a + b;
+            case "-":
+                return a - b;
+            case "*":
+                return a * b;
+            case "/":
+                return a / b;
+            default:
+                throw new InputMismatchException("Неверный формат данных");
+        }
+    }
+}
